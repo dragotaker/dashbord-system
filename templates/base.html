@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}OrthoScreen - Система скрининга{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <a href="/" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                </svg>
+                OrthoScreen
+            </a>
+            <nav>
+                <a href="/" class="{% block nav_home %}{% endblock %}">Скрининг</a>
+                <a href="/dashboard" class="{% block nav_dashboard %}{% endblock %}">Аналитика</a>
+                <a href="/apidocs/" target="_blank">API</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <p>OrthoScreen v1.0 | Система раннего выявления патологий опорно-двигательного аппарата</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/chart.min.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

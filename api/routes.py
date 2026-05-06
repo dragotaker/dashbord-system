@@ -65,7 +65,7 @@ def predict():
 
         return jsonify({
             "status": "success",
-            "prediction": prediction_data,
+            "prediction": prediction_data, # Тут внутри лежат top_results и recommendations
             "bmi_calculated": round(bmi, 2)
         })
     except Exception as e:
