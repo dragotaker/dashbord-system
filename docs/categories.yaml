@@ -1,0 +1,23 @@
+tags:
+  - Analytics
+summary: Распределение по категориям и диагнозам
+description: Без параметра 'name' возвращает общие группы. С параметром 'name' возвращает топ-диагнозов внутри этой группы.
+parameters:
+  - name: name
+    in: query
+    type: string
+    description: "Название группы патологий для детализации (например, 'Деформации стопы')"
+  - name: start
+    in: query
+    type: string
+  - name: end
+    in: query
+    type: string
+responses:
+  200:
+    description: Словарь распределения
+    schema:
+      type: object
+      additionalProperties:
+        type: integer
+      example: {"Плоскостопие": 45, "Вальгус": 30}

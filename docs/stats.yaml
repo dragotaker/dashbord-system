@@ -1,0 +1,24 @@
+tags:
+  - Analytics
+summary: Общие показатели базы данных
+description: Возвращает количество пациентов, средний возраст, средний ИМТ и самую частую патологию.
+parameters:
+  - name: start
+    in: query
+    type: string
+    format: date
+    description: "Начало периода (ГГГГ-ММ-ДД)"
+  - name: end
+    in: query
+    type: string
+    format: date
+    description: "Конец периода (ГГГГ-ММ-ДД)"
+responses:
+  200:
+    description: Успешный возврат статистики
+    schema:
+      properties:
+        total_patients: {type: integer, example: 150}
+        avg_age: {type: number, example: 42.5}
+        avg_bmi: {type: number, example: 25.1}
+        most_common: {type: string, example: "Деформации стопы"}

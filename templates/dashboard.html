@@ -1,26 +1,121 @@
 {% extends "base.html" %}
 {% block title %}Аналитика - OrthoScreen{% endblock %}
 {% block nav_dashboard %}active{% endblock %}
+
 {% block content %}
 <div class="dashboard-container">
-    <div class="stats-grid">
-        <div class="stat-card"><h3>Всего</h3><p id="statTotal">-</p></div>
-        <div class="stat-card"><h3>Возраст</h3><p id="statAge">-</p></div>
-        <div class="stat-card"><h3>ИМТ</h3><p id="statBMI">-</p></div>
-        <div class="stat-card"><h3>Топ</h3><p id="statTop">-</p></div>
+    
+    <div class="dashboard-header">
+        <h1>Аналитика пациентов</h1>
+        <p>Статистика и распределение диагнозов по периодам</p>
     </div>
-    <div class="charts-grid">
-        <div class="chart-card"><h2>Патологии</h2><canvas id="mainChart"></canvas></div>
-        <div class="chart-card"><h2>Возраст</h2><canvas id="ageChart"></canvas></div>
-        <div class="chart-card"><h2>ИМТ</h2><canvas id="bmiChart"></canvas></div>
-    </div>
-    <section id="detailsSection" style="display: none;">
-        <div class="chart-card">
-            <h2 id="detailsTitle">Детали</h2>
-            <canvas id="detailsChart"></canvas>
-            <button onclick="closeDetails()">Закрыть</button>
+
+    <div class="filter-section">
+        <div class="filter-group">
+            <label for="dateStart">Период с:</label>
+            <input type="date" id="dateStart">
         </div>
-    </section>
+        <div class="filter-group">
+            <label for="dateEnd">по:</label>
+            <input type="date" id="dateEnd">
+        </div>
+        <button class="btn-primary" onclick="updateDashboard()">Обновить</button>
+        <button class="btn-secondary" onclick="resetFilters()">Сбросить</button>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Пациентов</div>
+                <div class="stat-value" id="statTotal">-</div>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Средний возраст</div>
+                <div class="stat-value" id="statAge">-</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Средний ИМТ</div>
+                <div class="stat-value" id="statBMI">-</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h2"/></svg>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Частый диагноз</div>
+                <div class="stat-value" id="statTop" style="font-size: 1.1rem; line-height: 1.2;">-</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        
+        <div class="chart-card full-width">
+            <div class="card-header">
+                <h3>Распределение патологий</h3>
+                <p class="card-subtitle">Нажмите на сектор для детализации</p>
+            </div>
+            <div class="chart-canvas-wrapper">
+                <canvas id="mainChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="card-header">
+                <h3>Возрастная группа</h3>
+            </div>
+            <div class="chart-canvas-wrapper">
+                <canvas id="ageChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="card-header">
+                <h3>Индекс массы тела (ИМТ)</h3>
+            </div>
+            <div class="chart-canvas-wrapper">
+                <canvas id="bmiChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="detailsSection" style="display: none; margin-top: 2rem;">
+        <div class="chart-card full-width">
+            <div class="card-header">
+                <h3 id="detailsTitle">Детализация</h3>
+                <button class="btn-close" onclick="closeDetails()">×</button>
+            </div>
+            <div class="chart-canvas-wrapper">
+                <canvas id="detailsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
 </div>
+{% endblock %}
+
+{% block scripts %}
+{# 1. Подключаем локальные библиотеки, которые ты скачал через curl #}
+<script src="{{ url_for('static', filename='js/chart.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chartjs-plugin-datalabels.min.js') }}"></script>
+
+{# 2. Подключаем сам файл логики #}
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}

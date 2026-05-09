@@ -1,0 +1,22 @@
+tags:
+  - ML Engine
+summary: Прогноз патологий стопы
+description: Принимает массив биометрии [возраст, рост, вес, размер, пол] и возвращает риски.
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      properties:
+        features:
+          type: array
+          items:
+            type: number
+          example: [22, 180, 80, 43, 1]
+responses:
+  200:
+    description: Успешный ответ
+    schema:
+      properties:
+        status: {type: string, example: "success"}
+        bmi_calculated: {type: number, example: 24.6}

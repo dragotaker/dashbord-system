@@ -10,47 +10,7 @@ api_bp = Blueprint('api', __name__)
 @api_bp.route('/predict', methods=['POST'])
 def predict():
     """
-    Эндпоинт для предсказания патологий стопы
-    ---
-    parameters:
-      - name: body
-        in: body
-        required: true
-        schema:
-          id: PredictionData
-          required:
-            - features
-          properties:
-            features:
-              type: array
-              items:
-                type: number
-              example: [22, 180, 80, 43, 1]
-              description: "[Возраст, Рост, Вес, Размер стопы, Пол(1-м, 0-ж)]"
-    responses:
-      200:
-        description: Успешный прогноз
-        schema:
-          properties:
-            status:
-              type: string
-              example: "success"
-            bmi_calculated:
-              type: number
-              example: 24.69
-            prediction:
-              type: object
-              properties:
-                top_results:
-                  type: array
-                  items:
-                    type: object
-                recommendations:
-                  type: array
-                  items:
-                    type: string
-      400:
-        description: Ошибка валидации данных
+    file: ../docs/predict.yaml
     """
     try:
         data = request.get_json()
