@@ -198,4 +198,6 @@ function resetFilters() {
 }
 
 document.addEventListener('DOMContentLoaded', () => updateDashboard());
-})(); // Конец обертки
+window.updateDashboard = updateDashboard;
+window.resetFilters = resetFilters;
+window.closeDetails = closeDetails;})(); // Конец обертки
