@@ -3,7 +3,6 @@ import pandas as pd
 
 analytics_bp = Blueprint("analytics", __name__)
 
-# Твой словарь (вынеси его в отдельный конфиг или оставь тут)
 KEYWORD_TO_CATEGORY = {
     # 1. Деформации стопы (самая большая группа)
     "вальгус": "Деформации стопы",
@@ -96,12 +95,9 @@ def get_data(start_date=None, end_date=None):
     df_s.columns = df_s.columns.str.strip().str.lower()
     df_o.columns = df_o.columns.str.strip().str.lower()
 
-    # ПРИНУДИТЕЛЬНОЕ ПРИВЕДЕНИЕ ТИПОВ ID
-    # Убираем .0 и переводим в числа, чтобы 1076.0 превратилось в 1076
     df_s['id'] = pd.to_numeric(df_s['id'], errors='coerce').fillna(0).astype(int)
     df_o['id_users'] = pd.to_numeric(df_o['id_users'], errors='coerce').fillna(0).astype(int)
 
-    # Объединяем
     df = pd.merge(
         df_s, 
         df_o[['id_users', 'date']], 
@@ -110,7 +106,6 @@ def get_data(start_date=None, end_date=None):
         how='left'
     )
 
-    # Категоризация
     def categorize(diagnosis):
         if pd.isna(diagnosis) or not isinstance(diagnosis, str):
             return "Не указано"
@@ -122,18 +117,15 @@ def get_data(start_date=None, end_date=None):
 
     df['category'] = df['diagnosis_rus'].apply(categorize)
 
-    # Типы данных
     if 'имт' in df.columns:
         df['имт'] = df['имт'].astype(str).str.replace(',', '.').astype(float)
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
 
-    # ФИЛЬТРАЦИЯ
     if start_date and start_date not in ['null', '']:
         df = df[df['date'] >= pd.to_datetime(start_date)]
     if end_date and end_date not in ['null', '']:
         df = df[df['date'] <= pd.to_datetime(end_date)]
 
-    # ТЕХНИЧЕСКИЙ ВЫВОД (увидишь в терминале Flask)
     print(f"DEBUG: После фильтрации осталось {len(df)} строк. Категорий 'Не указано': {len(df[df['category'] == 'Не указано'])}")
 
     return df
@@ -148,10 +140,8 @@ def get_categories():
     df = get_data(start, end)
     category_name = request.args.get("name")
 
-    # Если запрошена конкретная категория для детализации
     if category_name:
         sub_df = df[df["category"] == category_name]
-        # Берем топ-10 конкретных диагнозов в этой группе
         detail_counts = sub_df["diagnosis_rus"].value_counts().head(10)
         return jsonify(
             {
@@ -160,9 +150,7 @@ def get_categories():
             }
         )
 
-    # Если это запрос для главного кругового графика
     counts = df.groupby("category").size()
-    # Возвращаем просто числа (если применил правку во фронте выше)
     return jsonify(counts.to_dict())
 
 
@@ -173,7 +161,7 @@ def get_stats():
     """
     start = request.args.get("start")
     end = request.args.get("end")
-    df = get_data(start, end) # И передай их сюда
+    df = get_data(start, end) 
     if df.empty:
         return jsonify({
             "total_patients": 0,
@@ -182,12 +170,10 @@ def get_stats():
             "most_common": "—"
         })
 
-    # Считаем показатели
     total = int(len(df))
     avg_age = round(df["age"].mean(), 1) if not df["age"].empty else 0
     avg_bmi = round(df["имт"].mean(), 1) if not df["имт"].empty else 0
     
-    # Безопасное получение самой частой категории
     category_counts = df["category"].value_counts()
     most_common = category_counts.idxmax() if not category_counts.empty else "—"
 
@@ -207,11 +193,10 @@ def get_age_dist():
     """
     start = request.args.get("start")
     end = request.args.get("end")
-    df = get_data(start, end) # Здесь тоже передаем фильтры
+    df = get_data(start, end) 
     if df.empty:
         return jsonify({})
 
-    # Разбиваем на понятные группы
     bins = [0, 18, 35, 60, 100]
     labels = ["Дети (0-18)", "Молодежь (19-35)", "Взрослые (36-60)", "Пожилые (60+)"]
 
@@ -230,11 +215,10 @@ def get_bmi_dist():
     """
     start = request.args.get("start")
     end = request.args.get("end")
-    df = get_data(start, end) # Здесь тоже передаем фильтры
+    df = get_data(start, end) 
     if df.empty:
         return jsonify({})
 
-    # Группируем ИМТ по классике ВОЗ
     bins = [0, 18.5, 25, 30, 35, 100]
     labels = ["Дефицит", "Норма", "Избыток", "Ожирение I", "Ожирение II+"]
 

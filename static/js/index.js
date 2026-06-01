@@ -52,7 +52,6 @@ function displayResults(data) {
     const probContainer = document.getElementById('probabilityBars');
     const recList = document.getElementById('recommendationsList');
 
-    // Проверка на наличие данных
     if (!data.prediction) return;
 
     resultSection.style.display = 'block';
@@ -61,10 +60,8 @@ function displayResults(data) {
     const recommendations = data.prediction.recommendations || [];
     
     if (results.length > 0) {
-        // Ставим только основной диагноз
         mainResult.textContent = results[0].group;
 
-        // Рисуем полоски
         probContainer.innerHTML = ''; 
         results.forEach((res, index) => {
             const barWrapper = document.createElement('div');
@@ -82,7 +79,6 @@ function displayResults(data) {
         });
     }
 
-    // Рекомендации
     recList.innerHTML = '';
     recommendations.forEach(rec => {
         const li = document.createElement('li');

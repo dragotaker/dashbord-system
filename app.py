@@ -5,24 +5,24 @@ from api.analytics import analytics_bp
 
 app = Flask(__name__)
 
-# 1. Сначала регистрируем Blueprint
+
 app.register_blueprint(api_bp, url_prefix='/api')
 app.register_blueprint(analytics_bp, url_prefix='/analytics')
 
-# 2. Настраиваем Swagger с явным указанием путей
+
 swagger_config = {
     "headers": [],
     "specs": [
         {
             "endpoint": 'apispec_1',
             "route": '/apispec_1.json',
-            "rule_filter": lambda rule: True,  # собираем все маршруты
+            "rule_filter": lambda rule: True, 
             "model_filter": lambda tag: True,
         }
     ],
     "static_url_path": "/flasgger_static",
     "swagger_ui": True,
-    "specs_route": "/apidocs/" # Документация будет строго здесь
+    "specs_route": "/apidocs/" 
 }
 
 swagger = Swagger(app, config=swagger_config)
@@ -33,7 +33,6 @@ def index():
 
 @app.route('/dashboard')
 def dashboard():
-    # Страница с твоими графиками
     return render_template('dashboard.html')
 
 if __name__ == '__main__':

@@ -1,20 +1,14 @@
 import os
 
 class Config:
-    # Базовая папка проекта (где лежит этот файл)
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     
-    # ПАПКА С МОДЕЛЯМИ
     MODELS_DIR = os.path.join(BASE_DIR, 'models')
     
-    # ПУТИ К КОНКРЕТНЫМ ФАЙЛАМ
-    # Основные "мозги" нейросети
     MODEL_PATH = os.path.join(MODELS_DIR, 'best_model.pkl')
     
-    # Скалер для нормализации чисел (Age, Height, Weight и т.д.)
     SCALER_PATH = os.path.join(MODELS_DIR, 'numeric_scaler.pkl')
     
-    # Энкодер для расшифровки текстовых ответов[cite: 4]
     ENCODER_PATH = os.path.join(MODELS_DIR, 'label_encoder.pkl')
 
     ADVICE_MAP = {
@@ -51,13 +45,8 @@ class Config:
     }
     
     
-    # ПАРАМЕТРЫ API
     DEBUG = True
     PORT = 5000
     HOST = '0.0.0.0'
     
-    # НАСТРОЙКИ ПРОЦЕССОРА
-    # Судя по твоему скалеру, модель ожидает ровно 5 признаков
-    # (Age, Height, weight, foot_size, и еще один)
-    # Если ты отправишь 6, она может снова ругнуться, проверь это!
     EXPECTED_FEATURES = 5

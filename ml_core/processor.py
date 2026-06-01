@@ -32,15 +32,14 @@ class DataProcessor:
                 datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 features[0], features[1], features[2], features[3], features[4],
                 round(bmi, 2),
-                prediction['top_results'][0]['group'], # Самый вероятный диагноз
-                prediction['top_results'][0]['probability'] # Уверенность модели
+                prediction['top_results'][0]['group'], 
+                prediction['top_results'][0]['probability'] 
             ])
         logging.info(f"Результат записан в мониторинг: {prediction['top_results'][0]['group']}")
 
     def process_input(self, data):
         f = data.get('features', [])
         
-        # --- Валидация (Проверка данных) ---
         if not isinstance(f, list) or len(f) != 5:
             raise ValueError("Некорректный формат данных. Ожидается список из 5 чисел.")
         
@@ -54,7 +53,6 @@ class DataProcessor:
             raise ValueError(f"Проверьте вес: {weight} кг вне допустимого диапазона.")
         if sex not in [0, 1]:
             raise ValueError("Пол должен быть 1 (муж) или 0 (жен).")
-        # -----------------------------------
 
         bmi = weight / ((height / 100) ** 2)
         
@@ -83,7 +81,6 @@ class DataProcessor:
 
         for item in top_3:
             group = item["group"]
-            # Логика определения триггера
             if group == "Деформации стопы" and (foot_size > 44 or foot_size < 35):
                 item["trigger"] = "Размер стопы"
             elif group == "Суставные и позвоночные патологии" and age > 50:
@@ -93,7 +90,6 @@ class DataProcessor:
             else:
                 item["trigger"] = "Биометрия"
 
-        # Берем советы из Config
         main_group = top_3[0]["group"]
         recs = Config.ADVICE_MAP.get(main_group, ["Плановый осмотр врача."]).copy()
         

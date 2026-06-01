@@ -7,14 +7,14 @@ if (typeof ChartDataLabels !== 'undefined') {
     Chart.register(ChartDataLabels);
 }
 
-// Универсальные настройки для того, чтобы цифры всегда были видны
+
 const globalDatalabelsOptions = {
-    display: true, // Всегда показывать
-    color: '#475569', // Темно-серый для читаемости на светлом фоне
+    display: true, 
+    color: '#475569', 
     font: { weight: 'bold', size: 12 },
     align: 'top',
     anchor: 'end',
-    offset: 4 // Отступ от края элемента
+    offset: 4 
 };
 
 async function updateDashboard() {
@@ -102,7 +102,7 @@ async function loadAgeChart(query = '') {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            layout: { padding: { top: 30 } }, // Место для цифр сверху
+            layout: { padding: { top: 30 } }, 
             plugins: {
                 legend: { display: false },
                 datalabels: {
@@ -174,7 +174,7 @@ async function loadDetails(categoryName, query = '') {
                 datalabels: {
                     display: true,
                     anchor: 'end',
-                    align: 'right', // Для горизонтального графика — справа от бара
+                    align: 'right', 
                     color: '#475569',
                     offset: 8
                 }
@@ -200,4 +200,4 @@ function resetFilters() {
 document.addEventListener('DOMContentLoaded', () => updateDashboard());
 window.updateDashboard = updateDashboard;
 window.resetFilters = resetFilters;
-window.closeDetails = closeDetails;})(); // Конец обертки
+window.closeDetails = closeDetails;})(); 
